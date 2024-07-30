@@ -136,6 +136,9 @@ def render_categorical_unicode(
     for category_alias_name, category_alias_counts in sorted(
         summary["category_alias_char_counts"].items(), key=lambda x: -len(x[1])
     ):
+        if category_alias_name is None:
+            continue
+        
         category_alias_name = category_alias_name.replace("_", " ")
         cats.append(
             FrequencyTable(
