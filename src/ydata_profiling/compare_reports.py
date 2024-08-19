@@ -138,10 +138,6 @@ def _compare_profile_report_preprocess(
                     config.html.style.primary_colors
                 )
 
-    # enforce same types
-    for report in reports[1:]:
-        report._typeset = reports[0].typeset
-
     # Obtain description sets
     descriptions = [report.get_description() for report in reports]
     for label, description in zip(labels, descriptions):

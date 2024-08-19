@@ -22,6 +22,6 @@ statsmodels>=0.13.2, <1
 # type checking
 typeguard>=3, <5
 imagehash==4.3.1
-wordcloud>=1.9.1
+wordcloud>=1.9.3
 dacite>=1.8
 numba>=0.56.0, <1
