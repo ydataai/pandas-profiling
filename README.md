@@ -237,11 +237,11 @@ To maximize its usefulness in real world contexts, `ydata-profiling` has a set o
 | Integration type | Description |
 |---|---|
 | [Other DataFrame libraries](https://docs.profiling.ydata.ai/latest/integrations/other_dataframe_libraries) | How to compute the profiling of data stored in libraries other than pandas |
-| [Great Expectations](https://ydata-profiling.ydata.ai/docs/master/pages/integrations/great_expectations.html) | Generating [Great Expectations](https://greatexpectations.io) expectations suites directly from a profiling report |
+| [Great Expectations](https://docs.profiling.ydata.ai/latest/integrations/great_expectations/) | Generating [Great Expectations](https://greatexpectations.io) expectations suites directly from a profiling report |
 | [Interactive applications](https://docs.profiling.ydata.ai/latest/integrations/interactive_applications) | Embedding profiling reports in [Streamlit](http://streamlit.io), [Dash](http://dash.plotly.com) or [Panel](https://panel.holoviz.org) applications |
 | [Pipelines](https://ydata-profiling.ydata.ai/docs/master/pages/integrations/pipelines.html) | Integration with DAG workflow execution tools like [Airflow](https://airflow.apache.org) or [Kedro](https://kedro.org) |
 | [Cloud services](https://ydata-profiling.ydata.ai/docs/master/pages/integrations/cloud_services.html) | Using `ydata-profiling` in hosted computation services like [Lambda](https://lambdalabs.com), [Google Cloud](https://github.com/GoogleCloudPlatform/analytics-componentized-patterns/blob/master/retail/propensity-model/bqml/bqml_kfp_retail_propensity_to_purchase.ipynb) or [Kaggle](https://www.kaggle.com/code) |
-| [IDEs](https://ydata-profiling.ydata.ai/docs/master/pages/integrations/ides.html) | Using `ydata-profiling` directly from integrated development environments such as [PyCharm](https://www.jetbrains.com/pycharm/) |
+| [IDEs](https://docs.profiling.ydata.ai/latest/integrations/ides/) | Using `ydata-profiling` directly from integrated development environments such as [PyCharm](https://www.jetbrains.com/pycharm/) |
 
 ## 🙋 Support
 Need help? Want to share a perspective? Report a bug? Ideas for collaborations? Reach out via the following channels:
