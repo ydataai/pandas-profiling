@@ -32,5 +32,5 @@ def pandas_preprocess(config: Settings, df: pd.DataFrame) -> pd.DataFrame:
     df = rename_index(df)
 
     # Ensure that columns are strings
-    df.columns = df.columns.astype("str")
+    df.columns = df.columns.map(str)
     return df
