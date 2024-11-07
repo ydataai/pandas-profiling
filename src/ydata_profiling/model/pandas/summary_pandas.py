@@ -36,7 +36,8 @@ def pandas_describe_1d(
     """
 
     # Make sure pd.NA is not in the series
-    series = series.fillna(np.nan)
+    with pd.option_context("future.no_silent_downcasting", True):
+        series = series.fillna(np.nan)
 
     if (
         isinstance(typeset, ProfilingTypeSet)
