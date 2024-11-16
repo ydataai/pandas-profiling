@@ -7,3 +7,4 @@ nbval
 pyarrow
 twine>=3.1.1
 kaggle
+nltk

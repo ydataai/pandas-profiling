@@ -5,6 +5,8 @@ from typing import List, Tuple
 
 import numpy as np
 import pandas as pd
+from nltk.corpus import stopwords
+import nltk
 
 from ydata_profiling.config import Settings
 from ydata_profiling.model.pandas.imbalance_pandas import column_imbalance_score
@@ -16,6 +18,9 @@ from ydata_profiling.model.summary_algorithms import (
     series_handle_nulls,
     series_hashable,
 )
+
+
+nltk.download('stopwords')
 
 
 def get_character_counts_vc(vc: pd.Series) -> pd.Series:
@@ -151,39 +156,56 @@ def unicode_summary_vc(vc: pd.Series) -> dict:
     return summary
 
 
-def word_summary_vc(vc: pd.Series, stop_words: List[str] = []) -> dict:
+def word_summary_vc(
+    vc: pd.Series,
+    stop_words: List[str] = [],
+    remove_default_stopwords: bool = True,
+    keep_stopwords: List[str] = []
+) -> dict:
     """Count the number of occurrences of each individual word across
     all lines of the data Series, then sort from the word with the most
     occurrences to the word with the least occurrences. If a list of
-    stop words is given, they will be ignored.
+    stop words is given, they will be ignored, along with default
+    English stopwords if remove_default_stopwords is True.
 
     Args:
         vc: Series containing all unique categories as index and their
             frequency as value. Sorted from the most frequent down.
         stop_words: List of stop words to ignore, empty by default.
+        remove_default_stopwords: Boolean flag to decide if default
+            English stopwords should be removed, default is True.
+        keep_stopwords: List of stop words to keep, even if they are
+            part of the default or custom stop words.
 
     Returns:
         A dict containing the results as a Series with unique words as
-        index and the computed frequency as value
+        index and the computed frequency as value.
     """
-    # TODO: configurable lowercase/punctuation etc.
-    # TODO: remove punctuation in words
+    # Convert custom stop words to lowercase
+    stop_words = {word.lower() for word in stop_words}
 
+    # Merge default stop words if enabled
+    if remove_default_stopwords:
+        default_stop_words = set(stopwords.words('english'))
+        stop_words = stop_words.union(default_stop_words)
+
+    # Remove any words specified in keep_stopwords
+    stop_words -= set(word.lower() for word in keep_stopwords)
+
+    # Prepare series for word count
     series = pd.Series(vc.index, index=vc)
     word_lists = series.str.lower().str.split()
     words = word_lists.explode().str.strip(string.punctuation + string.whitespace)
     word_counts = pd.Series(words.index, index=words)
-    # fix for pandas 1.0.5
     word_counts = word_counts[word_counts.index.notnull()]
     word_counts = word_counts.groupby(level=0, sort=False).sum()
     word_counts = word_counts.sort_values(ascending=False)
 
-    # Remove stop words
-    if len(stop_words) > 0:
-        stop_words = [x.lower() for x in stop_words]
-        word_counts = word_counts.loc[~word_counts.index.isin(stop_words)]
+    # Exclude stop words
+    word_counts = word_counts.loc[~word_counts.index.isin(stop_words)]
 
     return {"word_counts": word_counts} if not word_counts.empty else {}
+
 
 
 def length_summary_vc(vc: pd.Series) -> dict:
