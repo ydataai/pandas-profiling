@@ -138,7 +138,7 @@ def render_variables_section(
             "alert_fields": alert_fields,
         }
 
-        template_variables.update(summary)
+        summary.update(template_variables)
 
         # Per type template variables
         if isinstance(summary["type"], list):
@@ -159,7 +159,7 @@ def render_variables_section(
         else:
             variable_type = summary["type"]
         render_map_type = render_map.get(variable_type, render_map["Unsupported"])
-        template_variables.update(render_map_type(config, template_variables))
+        template_variables.update(render_map_type(config, summary))
 
         # Ignore these
         if reject_variables:

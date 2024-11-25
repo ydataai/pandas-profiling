@@ -4,12 +4,13 @@ from pyspark.sql import DataFrame
 
 from ydata_profiling.config import Settings
 from ydata_profiling.model.summary_algorithms import describe_text_1d
+from ydata_profiling.model.var_description.default import VarDescription
 
 
 @describe_text_1d.register
 def describe_text_1d_spark(
-    config: Settings, df: DataFrame, summary: dict
-) -> Tuple[Settings, DataFrame, dict]:
+    config: Settings, df: DataFrame, summary: VarDescription
+) -> Tuple[Settings, DataFrame, VarDescription]:
     """Describe a categorical series.
 
     Args:

@@ -1,4 +1,4 @@
-from unittest.mock import Mock, patch
+from unittest.mock import MagicMock, Mock, patch
 
 import pytest
 
@@ -20,14 +20,22 @@ def batch():
 
 
 def test_generic_expectations(batch):
-    generic_expectations("column", {"n_missing": 0, "p_unique": 1.0}, batch)
+    default_desc = MagicMock()
+    default_desc.n_missing = 0
+    d = {"p_unique": 1.0}
+    default_desc.__getitem__.side_effect = d.__getitem__
+    generic_expectations("column", default_desc, batch)
     batch.expect_column_to_exist.assert_called_once()
     batch.expect_column_values_to_not_be_null.assert_called_once()
     batch.expect_column_values_to_be_unique.assert_called_once()
 
 
 def test_generic_expectations_min(batch):
-    generic_expectations("column", {"n_missing": 1, "p_unique": 0.5}, batch)
+    default_desc = MagicMock()
+    default_desc.n_missing = 1
+    d = {"p_unique": 0.5}
+    default_desc.__getitem__.side_effect = d.__getitem__
+    generic_expectations("column", default_desc, batch)
     batch.expect_column_to_exist.assert_called_once()
     batch.expect_column_values_to_not_be_null.assert_not_called()
     batch.expect_column_values_to_be_unique.assert_not_called()
@@ -93,22 +101,21 @@ def test_numeric_expectations_min(batch):
 
 
 def test_categorical_expectations(batch):
-    categorical_expectations(
-        "column",
-        {
-            "n_distinct": 1,
-            "p_distinct": 0.1,
-            "value_counts_without_nan": {"val1": 1, "val2": 2},
-        },
-        batch,
-    )
+    default_desc = MagicMock()
+    d = {"n_distinct": 1, "p_unique": 0.1}
+    default_desc.__getitem__.side_effect = d.__getitem__
+    default_desc.value_counts_without_nan = {"val1": 1, "val2": 2}
+    categorical_expectations("column", default_desc, batch)
     batch.expect_column_values_to_be_in_set.assert_called_once_with(
         "column", {"val1", "val2"}
     )
 
 
 def test_categorical_expectations_min(batch):
-    categorical_expectations("column", {"n_distinct": 15, "p_distinct": 1.0}, batch)
+    default_desc = MagicMock()
+    d = {"n_distinct": 15, "p_distinct": 1.0}
+    default_desc.__getitem__.side_effect = d.__getitem__
+    categorical_expectations("column", default_desc, batch)
     batch.expect_column_values_to_be_in_set.assert_not_called()
 
 

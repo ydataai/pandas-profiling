@@ -1,4 +1,5 @@
 from ydata_profiling.config import Settings
+from ydata_profiling.model.var_description.default import VarDescription
 from ydata_profiling.report.formatters import fmt, fmt_bytesize, fmt_percent
 from ydata_profiling.report.presentation.core import (
     HTML,
@@ -8,7 +9,7 @@ from ydata_profiling.report.presentation.core import (
 )
 
 
-def render_generic(config: Settings, summary: dict) -> dict:
+def render_generic(config: Settings, summary: VarDescription) -> dict:
     info = VariableInfo(
         anchor_id=summary["varid"],
         alerts=summary["alerts"],
@@ -22,17 +23,17 @@ def render_generic(config: Settings, summary: dict) -> dict:
         [
             {
                 "name": "Missing",
-                "value": fmt(summary["n_missing"]),
+                "value": fmt(summary.n_missing),
                 "alert": "n_missing" in summary["alert_fields"],
             },
             {
                 "name": "Missing (%)",
-                "value": fmt_percent(summary["p_missing"]),
+                "value": fmt_percent(summary.p_missing),
                 "alert": "p_missing" in summary["alert_fields"],
             },
             {
                 "name": "Memory size",
-                "value": fmt_bytesize(summary["memory_size"]),
+                "value": fmt_bytesize(summary.memory_size),
                 "alert": False,
             },
         ],

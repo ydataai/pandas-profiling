@@ -5,6 +5,7 @@ import pandas as pd
 
 from ydata_profiling.config import Settings
 from ydata_profiling.model.summary_algorithms import describe_path_1d
+from ydata_profiling.model.var_description.default import VarDescription
 
 
 def path_summary(series: pd.Series) -> dict:
@@ -19,8 +20,9 @@ def path_summary(series: pd.Series) -> dict:
 
     # TODO: optimize using value counts
     summary = {
-        "common_prefix": os.path.commonprefix(series.values.tolist())
-        or "No common prefix",
+        "common_prefix": (
+            os.path.commonprefix(series.values.tolist()) or "No common prefix"
+        ),
         "stem_counts": series.map(lambda x: os.path.splitext(x)[0]).value_counts(),
         "suffix_counts": series.map(lambda x: os.path.splitext(x)[1]).value_counts(),
         "name_counts": series.map(lambda x: os.path.basename(x)).value_counts(),
@@ -39,8 +41,8 @@ def path_summary(series: pd.Series) -> dict:
 
 @describe_path_1d.register
 def pandas_describe_path_1d(
-    config: Settings, series: pd.Series, summary: dict
-) -> Tuple[Settings, pd.Series, dict]:
+    config: Settings, series: pd.Series, summary: VarDescription
+) -> Tuple[Settings, pd.Series, VarDescription]:
     """Describe a path series.
 
     Args:

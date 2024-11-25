@@ -1,14 +1,16 @@
 from collections import Counter
+from typing import Dict
 
 import pandas as pd
 
 from ydata_profiling.config import Settings
 from ydata_profiling.model.table import get_table_stats
+from ydata_profiling.model.var_description.default import VarDescription
 
 
 @get_table_stats.register
 def pandas_get_table_stats(
-    config: Settings, df: pd.DataFrame, variable_stats: dict
+    config: Settings, df: pd.DataFrame, variable_stats: Dict[str, VarDescription]
 ) -> dict:
     """General statistics for the DataFrame.
 
@@ -36,10 +38,10 @@ def pandas_get_table_stats(
     }
 
     for series_summary in variable_stats.values():
-        if "n_missing" in series_summary and series_summary["n_missing"] > 0:
+        if series_summary.n_missing > 0:
             table_stats["n_vars_with_missing"] += 1
-            table_stats["n_cells_missing"] += series_summary["n_missing"]
-            if series_summary["n_missing"] == n:
+            table_stats["n_cells_missing"] += series_summary.n_missing
+            if series_summary.n_missing == n:
                 table_stats["n_vars_all_missing"] += 1
 
     table_stats["p_cells_missing"] = (

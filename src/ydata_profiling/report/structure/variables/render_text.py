@@ -1,6 +1,7 @@
 from typing import Any, Dict, List
 
 from ydata_profiling.config import Settings
+from ydata_profiling.model.var_description.default import VarDescription
 from ydata_profiling.report.formatters import fmt, fmt_bytesize, fmt_percent
 from ydata_profiling.report.presentation.core import (
     Container,
@@ -21,7 +22,7 @@ from ydata_profiling.report.structure.variables.render_common import render_comm
 from ydata_profiling.visualisation.plot import plot_word_cloud
 
 
-def render_text(config: Settings, summary: Dict[str, Any]) -> Dict[str, Any]:
+def render_text(config: Settings, summary: VarDescription) -> Dict[str, Any]:
     if config.vars.text.redact:
         render = render_categorical(config, summary)
         return render
@@ -58,17 +59,17 @@ def render_text(config: Settings, summary: Dict[str, Any]) -> Dict[str, Any]:
             },
             {
                 "name": "Missing",
-                "value": fmt(summary["n_missing"]),
+                "value": fmt(summary.n_missing),
                 "alert": "n_missing" in summary["alert_fields"],
             },
             {
                 "name": "Missing (%)",
-                "value": fmt_percent(summary["p_missing"]),
+                "value": fmt_percent(summary.p_missing),
                 "alert": "p_missing" in summary["alert_fields"],
             },
             {
                 "name": "Memory size",
-                "value": fmt_bytesize(summary["memory_size"]),
+                "value": fmt_bytesize(summary.memory_size),
                 "alert": False,
             },
         ],

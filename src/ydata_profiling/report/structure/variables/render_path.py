@@ -1,4 +1,5 @@
 from ydata_profiling.config import Settings
+from ydata_profiling.model.var_description.default import VarDescription
 from ydata_profiling.report.formatters import fmt, fmt_numeric
 from ydata_profiling.report.presentation.core import Container, FrequencyTable, Table
 from ydata_profiling.report.presentation.frequency_table_utils import freq_table
@@ -7,7 +8,7 @@ from ydata_profiling.report.structure.variables.render_categorical import (
 )
 
 
-def render_path(config: Settings, summary: dict) -> dict:
+def render_path(config: Settings, summary: VarDescription) -> dict:
     varid = summary["varid"]
     n_freq_table_max = config.n_freq_table_max
     redact = config.vars.cat.redact
@@ -18,7 +19,7 @@ def render_path(config: Settings, summary: dict) -> dict:
     for path_part in keys:
         template_variables[f"freqtable_{path_part}"] = freq_table(
             freqtable=summary[f"{path_part}_counts"],
-            n=summary["n"],
+            n=summary.n,
             max_number_to_print=n_freq_table_max,
         )
 

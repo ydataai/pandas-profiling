@@ -14,6 +14,7 @@ from ydata_profiling.model.summary_algorithms import (
     series_handle_nulls,
     series_hashable,
 )
+from ydata_profiling.model.var_description.default import VarDescription
 
 
 @describe_text_1d.register
@@ -22,8 +23,8 @@ from ydata_profiling.model.summary_algorithms import (
 def pandas_describe_text_1d(
     config: Settings,
     series: pd.Series,
-    summary: dict,
-) -> Tuple[Settings, pd.Series, dict]:
+    summary: VarDescription,
+) -> Tuple[Settings, pd.Series, VarDescription]:
     """Describe string series.
 
     Args:
@@ -38,7 +39,7 @@ def pandas_describe_text_1d(
     series = series.astype(str)
 
     # Only run if at least 1 non-missing value
-    value_counts = summary["value_counts_without_nan"]
+    value_counts = summary.value_counts_without_nan
     value_counts.index = value_counts.index.astype(str)
 
     summary.update({"first_rows": series.head(5)})

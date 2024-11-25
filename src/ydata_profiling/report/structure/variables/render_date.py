@@ -1,6 +1,7 @@
 from typing import Any, Dict
 
 from ydata_profiling.config import Settings
+from ydata_profiling.model.var_description.default import VarDescription
 from ydata_profiling.report.formatters import fmt, fmt_bytesize, fmt_percent
 from ydata_profiling.report.presentation.core import (
     Container,
@@ -11,7 +12,7 @@ from ydata_profiling.report.presentation.core import (
 from ydata_profiling.visualisation.plot import histogram, mini_histogram
 
 
-def render_date(config: Settings, summary: Dict[str, Any]) -> Dict[str, Any]:
+def render_date(config: Settings, summary: VarDescription) -> Dict[str, Any]:
     varid = summary["varid"]
     template_variables = {}
 
@@ -41,17 +42,17 @@ def render_date(config: Settings, summary: Dict[str, Any]) -> Dict[str, Any]:
             },
             {
                 "name": "Missing",
-                "value": fmt(summary["n_missing"]),
+                "value": fmt(summary.n_missing),
                 "alert": False,
             },
             {
                 "name": "Missing (%)",
-                "value": fmt_percent(summary["p_missing"]),
+                "value": fmt_percent(summary.p_missing),
                 "alert": False,
             },
             {
                 "name": "Memory size",
-                "value": fmt_bytesize(summary["memory_size"]),
+                "value": fmt_bytesize(summary.memory_size),
                 "alert": False,
             },
         ],

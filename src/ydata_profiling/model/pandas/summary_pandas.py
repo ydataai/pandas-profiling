@@ -2,7 +2,7 @@
 
 import multiprocessing
 import multiprocessing.pool
-from typing import Tuple
+from typing import Dict, Tuple
 
 import numpy as np
 import pandas as pd
@@ -13,6 +13,7 @@ from ydata_profiling.config import Settings
 from ydata_profiling.model.summarizer import BaseSummarizer
 from ydata_profiling.model.summary import describe_1d, get_series_descriptions
 from ydata_profiling.model.typeset import ProfilingTypeSet
+from ydata_profiling.model.var_description.default import VarDescription
 from ydata_profiling.utils.dataframe import sort_column_names
 
 
@@ -22,7 +23,7 @@ def pandas_describe_1d(
     series: pd.Series,
     summarizer: BaseSummarizer,
     typeset: VisionsTypeset,
-) -> dict:
+) -> VarDescription:
     """Describe a series (infer the variable type, then calculate type-specific values).
 
     Args:
@@ -64,8 +65,8 @@ def pandas_get_series_descriptions(
     summarizer: BaseSummarizer,
     typeset: VisionsTypeset,
     pbar: tqdm,
-) -> dict:
-    def multiprocess_1d(args: tuple) -> Tuple[str, dict]:
+) -> Dict[str, VarDescription]:
+    def multiprocess_1d(args: tuple) -> Tuple[str, VarDescription]:
         """Wrapper to process series in parallel.
 
         Args:

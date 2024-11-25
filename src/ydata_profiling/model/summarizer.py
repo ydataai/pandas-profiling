@@ -11,10 +11,8 @@ from ydata_profiling.model.handler import Handler
 from ydata_profiling.model.summary_algorithms import (
     describe_boolean_1d,
     describe_categorical_1d,
-    describe_counts,
     describe_date_1d,
     describe_file_1d,
-    describe_generic,
     describe_image_1d,
     describe_numeric_1d,
     describe_path_1d,
@@ -23,6 +21,7 @@ from ydata_profiling.model.summary_algorithms import (
     describe_timeseries_1d,
     describe_url_1d,
 )
+from ydata_profiling.model.var_description.default import VarDescription
 
 
 class BaseSummarizer(Handler):
@@ -33,7 +32,7 @@ class BaseSummarizer(Handler):
 
     def summarize(
         self, config: Settings, series: pd.Series, dtype: Type[VisionsBaseType]
-    ) -> dict:
+    ) -> VarDescription:
         """
 
         Returns:
@@ -49,8 +48,6 @@ class PandasProfilingSummarizer(BaseSummarizer):
     def __init__(self, typeset: VisionsTypeset, *args, **kwargs):
         summary_map: Dict[str, List[Callable]] = {
             "Unsupported": [
-                describe_counts,
-                describe_generic,
                 describe_supported,
             ],
             "Numeric": [
@@ -87,7 +84,7 @@ class PandasProfilingSummarizer(BaseSummarizer):
         super().__init__(summary_map, typeset, *args, **kwargs)
 
 
-def format_summary(summary: Union[BaseDescription, dict]) -> dict:
+def format_summary(summary: Union[BaseDescription, VarDescription, dict]) -> dict:
     """Prepare summary for export to json file.
 
     Args:

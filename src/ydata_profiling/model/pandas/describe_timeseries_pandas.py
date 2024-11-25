@@ -13,6 +13,7 @@ from ydata_profiling.model.summary_algorithms import (
     series_handle_nulls,
     series_hashable,
 )
+from ydata_profiling.model.var_description.default import VarDescription
 
 
 def stationarity_test(config: Settings, series: pd.Series) -> Tuple[bool, float]:
@@ -198,8 +199,8 @@ def compute_gap_stats(series: pd.Series) -> pd.Series:
 @series_hashable
 @series_handle_nulls
 def pandas_describe_timeseries_1d(
-    config: Settings, series: pd.Series, summary: dict
-) -> Tuple[Settings, pd.Series, dict]:
+    config: Settings, series: pd.Series, summary: VarDescription
+) -> Tuple[Settings, pd.Series, VarDescription]:
     """Describe a timeseries.
 
     Args:

@@ -9,6 +9,7 @@ from ydata_profiling.config import Settings
 from ydata_profiling.model.describe import describe
 from ydata_profiling.model.summary import describe_1d
 from ydata_profiling.model.typeset import ProfilingTypeSet
+from ydata_profiling.model.var_description.default import VarDescription
 
 check_is_NaN = "ydata_profiling.check_is_NaN"
 
@@ -49,7 +50,7 @@ def test_describe_unique(data, expected, summarizer, typeset):
     config = Settings()
     config.vars.num.low_categorical_threshold = 0
 
-    desc_1d = describe_1d(config, data, summarizer, typeset)
+    desc_1d: VarDescription = describe_1d(config, data, summarizer, typeset)
     if expected["is_unique"] is not None:
         assert (
             desc_1d["p_unique"] == expected["p_unique"]
@@ -562,6 +563,13 @@ def test_describe_df(column, describe_data, expected_results, summarizer):
     for k, v in expected_results[column].items():
         if v == check_is_NaN:
             test_condition = k not in results.variables[column]
+        # values from common description
+        elif k in asdict(results.variables[column]):
+            if isinstance(v, float):
+                assert pytest.approx(v) == getattr(results.variables[column], k)
+            else:
+                assert v == getattr(results.variables[column], k)
+            continue
         elif isinstance(v, float):
             test_condition = pytest.approx(v) == results.variables[column][k]
         else:

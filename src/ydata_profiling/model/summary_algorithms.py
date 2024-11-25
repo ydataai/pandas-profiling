@@ -7,6 +7,7 @@ from multimethod import multimethod
 from scipy.stats import chisquare
 
 from ydata_profiling.config import Settings
+from ydata_profiling.model.var_description.default import VarDescription
 
 T = TypeVar("T")
 
@@ -62,13 +63,18 @@ def chi_square(
 
 
 def series_hashable(
-    fn: Callable[[Settings, pd.Series, dict], Tuple[Settings, pd.Series, dict]]
-) -> Callable[[Settings, pd.Series, dict], Tuple[Settings, pd.Series, dict]]:
+    fn: Callable[
+        [Settings, pd.Series, VarDescription],
+        Tuple[Settings, pd.Series, VarDescription],
+    ]
+) -> Callable[
+    [Settings, pd.Series, VarDescription], Tuple[Settings, pd.Series, VarDescription]
+]:
     @functools.wraps(fn)
     def inner(
-        config: Settings, series: pd.Series, summary: dict
-    ) -> Tuple[Settings, pd.Series, dict]:
-        if not summary["hashable"]:
+        config: Settings, series: pd.Series, summary: VarDescription
+    ) -> Tuple[Settings, pd.Series, VarDescription]:
+        if not summary.hashable:
             return config, series, summary
         return fn(config, series, summary)
 
@@ -76,14 +82,19 @@ def series_hashable(
 
 
 def series_handle_nulls(
-    fn: Callable[[Settings, pd.Series, dict], Tuple[Settings, pd.Series, dict]]
-) -> Callable[[Settings, pd.Series, dict], Tuple[Settings, pd.Series, dict]]:
+    fn: Callable[
+        [Settings, pd.Series, VarDescription],
+        Tuple[Settings, pd.Series, VarDescription],
+    ]
+) -> Callable[
+    [Settings, pd.Series, VarDescription], Tuple[Settings, pd.Series, VarDescription]
+]:
     """Decorator for nullable series"""
 
     @functools.wraps(fn)
     def inner(
-        config: Settings, series: pd.Series, summary: dict
-    ) -> Tuple[Settings, pd.Series, dict]:
+        config: Settings, series: pd.Series, summary: VarDescription
+    ) -> Tuple[Settings, pd.Series, VarDescription]:
         if series.hasnans:
             series = series.dropna()
 
@@ -104,91 +115,77 @@ def named_aggregate_summary(series: pd.Series, key: str) -> dict:
 
 
 @multimethod
-def describe_counts(
-    config: Settings, series: Any, summary: dict
-) -> Tuple[Settings, Any, dict]:
-    raise NotImplementedError()
-
-
-@multimethod
 def describe_supported(
     config: Settings, series: Any, series_description: dict
-) -> Tuple[Settings, Any, dict]:
-    raise NotImplementedError()
-
-
-@multimethod
-def describe_generic(
-    config: Settings, series: Any, summary: dict
-) -> Tuple[Settings, Any, dict]:
+) -> Tuple[Settings, Any, VarDescription]:
     raise NotImplementedError()
 
 
 @multimethod
 def describe_numeric_1d(
-    config: Settings, series: Any, summary: dict
-) -> Tuple[Settings, Any, dict]:
+    config: Settings, series: Any, summary: VarDescription
+) -> Tuple[Settings, Any, VarDescription]:
     raise NotImplementedError()
 
 
 @multimethod
 def describe_text_1d(
-    config: Settings, series: Any, summary: dict
-) -> Tuple[Settings, Any, dict, Any]:
+    config: Settings, series: Any, summary: VarDescription
+) -> Tuple[Settings, Any, VarDescription]:
     raise NotImplementedError()
 
 
 @multimethod
 def describe_date_1d(
-    config: Settings, series: Any, summary: dict
-) -> Tuple[Settings, Any, dict]:
+    config: Settings, series: Any, summary: VarDescription
+) -> Tuple[Settings, Any, VarDescription]:
     raise NotImplementedError()
 
 
 @multimethod
 def describe_categorical_1d(
-    config: Settings, series: pd.Series, summary: dict
-) -> Tuple[Settings, pd.Series, dict]:
+    config: Settings, series: pd.Series, summary: VarDescription
+) -> Tuple[Settings, Any, VarDescription]:
     raise NotImplementedError()
 
 
 @multimethod
 def describe_url_1d(
-    config: Settings, series: Any, summary: dict
-) -> Tuple[Settings, Any, dict]:
+    config: Settings, series: Any, summary: VarDescription
+) -> Tuple[Settings, Any, VarDescription]:
     raise NotImplementedError()
 
 
 @multimethod
 def describe_file_1d(
-    config: Settings, series: Any, summary: dict
-) -> Tuple[Settings, Any, dict]:
+    config: Settings, series: Any, summary: VarDescription
+) -> Tuple[Settings, Any, VarDescription]:
     raise NotImplementedError()
 
 
 @multimethod
 def describe_path_1d(
-    config: Settings, series: Any, summary: dict
-) -> Tuple[Settings, Any, dict]:
+    config: Settings, series: Any, summary: VarDescription
+) -> Tuple[Settings, Any, VarDescription]:
     raise NotImplementedError()
 
 
 @multimethod
 def describe_image_1d(
-    config: Settings, series: Any, summary: dict
-) -> Tuple[Settings, Any, dict]:
+    config: Settings, series: Any, summary: VarDescription
+) -> Tuple[Settings, Any, VarDescription]:
     raise NotImplementedError()
 
 
 @multimethod
 def describe_boolean_1d(
-    config: Settings, series: Any, summary: dict
-) -> Tuple[Settings, Any, dict]:
+    config: Settings, series: Any, summary: VarDescription
+) -> Tuple[Settings, Any, VarDescription]:
     raise NotImplementedError()
 
 
 @multimethod
 def describe_timeseries_1d(
-    config: Settings, series: Any, summary: dict
-) -> Tuple[Settings, Any, dict]:
+    config: Settings, series: Any, summary: VarDescription
+) -> Tuple[Settings, Any, VarDescription]:
     raise NotImplementedError()

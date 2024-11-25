@@ -1,4 +1,5 @@
 from ydata_profiling.config import Settings
+from ydata_profiling.model.var_description.default import VarDescription
 from ydata_profiling.report.formatters import (
     fmt,
     fmt_bytesize,
@@ -17,7 +18,7 @@ from ydata_profiling.report.structure.variables.render_common import render_comm
 from ydata_profiling.visualisation.plot import histogram, mini_histogram
 
 
-def render_real(config: Settings, summary: dict) -> dict:
+def render_real(config: Settings, summary: VarDescription) -> dict:
     varid = summary["varid"]
     template_variables = render_common(config, summary)
     image_format = config.plot.image_format
@@ -48,12 +49,12 @@ def render_real(config: Settings, summary: dict) -> dict:
             },
             {
                 "name": "Missing",
-                "value": fmt(summary["n_missing"]),
+                "value": fmt(summary.n_missing),
                 "alert": "n_missing" in summary["alert_fields"],
             },
             {
                 "name": "Missing (%)",
-                "value": fmt_percent(summary["p_missing"]),
+                "value": fmt_percent(summary.p_missing),
                 "alert": "p_missing" in summary["alert_fields"],
             },
             {
@@ -111,7 +112,7 @@ def render_real(config: Settings, summary: dict) -> dict:
             },
             {
                 "name": "Memory size",
-                "value": fmt_bytesize(summary["memory_size"]),
+                "value": fmt_bytesize(summary.memory_size),
                 "alert": False,
             },
         ],

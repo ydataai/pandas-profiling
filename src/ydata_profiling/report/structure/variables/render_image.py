@@ -1,6 +1,7 @@
 import pandas as pd
 
 from ydata_profiling.config import Settings
+from ydata_profiling.model.var_description.default import VarDescription
 from ydata_profiling.report.formatters import fmt_numeric
 from ydata_profiling.report.presentation.core import (
     Container,
@@ -13,7 +14,7 @@ from ydata_profiling.report.structure.variables.render_file import render_file
 from ydata_profiling.visualisation.plot import scatter_series
 
 
-def render_image(config: Settings, summary: dict) -> dict:
+def render_image(config: Settings, summary: VarDescription) -> dict:
     varid = summary["varid"]
     n_freq_table_max = config.n_freq_table_max
     redact = config.vars.cat.redact
@@ -135,7 +136,7 @@ def render_image(config: Settings, summary: dict) -> dict:
         FrequencyTable(
             freq_table(
                 freqtable=summary["image_dimensions"].value_counts(),
-                n=summary["n"],
+                n=summary.n,
                 max_number_to_print=n_freq_table_max,
             ),
             name="Common values",
@@ -156,7 +157,7 @@ def render_image(config: Settings, summary: dict) -> dict:
             FrequencyTable(
                 freq_table(
                     freqtable=pd.Series(summary["exif_keys_counts"]),
-                    n=summary["n"],
+                    n=summary.n,
                     max_number_to_print=n_freq_table_max,
                 ),
                 name="Exif keys",
@@ -172,7 +173,7 @@ def render_image(config: Settings, summary: dict) -> dict:
                 FrequencyTable(
                     freq_table(
                         freqtable=counts,
-                        n=summary["n"],
+                        n=summary.n,
                         max_number_to_print=n_freq_table_max,
                     ),
                     name=key,

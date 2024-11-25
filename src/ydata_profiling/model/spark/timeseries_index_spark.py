@@ -1,4 +1,5 @@
 """Compute statistical description of datasets."""
+
 from pyspark.sql import DataFrame
 
 from ydata_profiling.config import Settings

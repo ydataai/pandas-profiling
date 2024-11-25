@@ -1,4 +1,5 @@
 """Compute statistical description of datasets."""
+
 import multiprocessing
 from typing import Tuple
 

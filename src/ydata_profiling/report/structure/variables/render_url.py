@@ -1,4 +1,5 @@
 from ydata_profiling.config import Settings
+from ydata_profiling.model.var_description.default import VarDescription
 from ydata_profiling.report.formatters import fmt, fmt_bytesize, fmt_percent
 from ydata_profiling.report.presentation.core import (
     Container,
@@ -11,7 +12,7 @@ from ydata_profiling.report.presentation.frequency_table_utils import freq_table
 from ydata_profiling.report.structure.variables.render_common import render_common
 
 
-def render_url(config: Settings, summary: dict) -> dict:
+def render_url(config: Settings, summary: VarDescription) -> dict:
     varid = summary["varid"]
     n_freq_table_max = config.n_freq_table_max
 
@@ -24,7 +25,7 @@ def render_url(config: Settings, summary: dict) -> dict:
     for url_part in keys:
         template_variables[f"freqtable_{url_part}"] = freq_table(
             freqtable=summary[f"{url_part}_counts"],
-            n=summary["n"],
+            n=summary.n,
             max_number_to_print=n_freq_table_max,
         )
 
@@ -101,17 +102,17 @@ def render_url(config: Settings, summary: dict) -> dict:
             },
             {
                 "name": "Missing",
-                "value": fmt(summary["n_missing"]),
+                "value": fmt(summary.n_missing),
                 "alert": "n_missing" in summary["alert_fields"],
             },
             {
                 "name": "Missing (%)",
-                "value": fmt_percent(summary["p_missing"]),
+                "value": fmt_percent(summary.p_missing),
                 "alert": "p_missing" in summary["alert_fields"],
             },
             {
                 "name": "Memory size",
-                "value": fmt_bytesize(summary["memory_size"]),
+                "value": fmt_bytesize(summary.memory_size),
                 "alert": False,
             },
         ],
@@ -120,8 +121,8 @@ def render_url(config: Settings, summary: dict) -> dict:
 
     fqm = FrequencyTableSmall(
         freq_table(
-            freqtable=summary["value_counts_without_nan"],
-            n=summary["n"],
+            freqtable=summary.value_counts_without_nan,
+            n=summary.n,
             max_number_to_print=n_obs_cat,
         ),
         redact=redact,

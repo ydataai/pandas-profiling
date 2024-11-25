@@ -1,6 +1,7 @@
 from typing import List
 
 from ydata_profiling.config import Settings
+from ydata_profiling.model.var_description.default import VarDescription
 from ydata_profiling.report.formatters import fmt, fmt_bytesize, fmt_percent
 from ydata_profiling.report.presentation.core import (
     Container,
@@ -16,7 +17,7 @@ from ydata_profiling.report.structure.variables.render_common import render_comm
 from ydata_profiling.visualisation.plot import cat_frequency_plot
 
 
-def render_boolean(config: Settings, summary: dict) -> dict:
+def render_boolean(config: Settings, summary: VarDescription) -> dict:
     varid = summary["varid"]
     n_obs_bool = config.vars.bool.n_obs
     image_format = config.plot.image_format
@@ -48,17 +49,17 @@ def render_boolean(config: Settings, summary: dict) -> dict:
             },
             {
                 "name": "Missing",
-                "value": fmt(summary["n_missing"]),
+                "value": fmt(summary.n_missing),
                 "alert": "n_missing" in summary["alert_fields"],
             },
             {
                 "name": "Missing (%)",
-                "value": fmt_percent(summary["p_missing"]),
+                "value": fmt_percent(summary.p_missing),
                 "alert": "p_missing" in summary["alert_fields"],
             },
             {
                 "name": "Memory size",
-                "value": fmt_bytesize(summary["memory_size"]),
+                "value": fmt_bytesize(summary.memory_size),
                 "alert": False,
             },
         ],
@@ -67,8 +68,8 @@ def render_boolean(config: Settings, summary: dict) -> dict:
 
     fqm = FrequencyTableSmall(
         freq_table(
-            freqtable=summary["value_counts_without_nan"],
-            n=summary["n"],
+            freqtable=summary.value_counts_without_nan,
+            n=summary.n,
             max_number_to_print=n_obs_bool,
         ),
         redact=False,
@@ -89,7 +90,7 @@ def render_boolean(config: Settings, summary: dict) -> dict:
     max_unique = config.plot.cat_freq.max_unique
 
     if show and (max_unique > 0):
-        if isinstance(summary["value_counts_without_nan"], list):
+        if isinstance(summary.value_counts_without_nan, list):
             items.append(
                 Container(
                     [
@@ -103,7 +104,7 @@ def render_boolean(config: Settings, summary: dict) -> dict:
                             name=config.html.style._labels[idx],
                             anchor_id=f"{varid}cat_frequency_plot_{idx}",
                         )
-                        for idx, s in enumerate(summary["value_counts_without_nan"])
+                        for idx, s in enumerate(summary.value_counts_without_nan)
                     ],
                     anchor_id=f"{varid}cat_frequency_plot",
                     name="Common Values (Plot)",
@@ -114,10 +115,7 @@ def render_boolean(config: Settings, summary: dict) -> dict:
         else:
             items.append(
                 Image(
-                    cat_frequency_plot(
-                        config,
-                        summary["value_counts_without_nan"],
-                    ),
+                    cat_frequency_plot(config, summary.value_counts_without_nan),
                     image_format=image_format,
                     alt="Common Values (Plot)",
                     name="Common Values (Plot)",

@@ -1,4 +1,5 @@
 """Organize the calculation of statistics for each series in this DataFrame."""
+
 from datetime import datetime
 from typing import Any, Dict, Optional
 
@@ -23,6 +24,7 @@ from ydata_profiling.model.summarizer import BaseSummarizer
 from ydata_profiling.model.summary import get_series_descriptions
 from ydata_profiling.model.table import get_table_stats
 from ydata_profiling.model.timeseries_index import get_time_index_description
+from ydata_profiling.model.var_description.default import VarDescription
 from ydata_profiling.utils.progress_bar import progress
 from ydata_profiling.version import __version__
 
@@ -71,7 +73,7 @@ def describe(
 
         # Variable-specific
         pbar.total += len(df.columns)
-        series_description = get_series_descriptions(
+        series_description: Dict[str, VarDescription] = get_series_descriptions(
             config, df, summarizer, typeset, pbar
         )
 

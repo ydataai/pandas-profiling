@@ -16,6 +16,7 @@ from ydata_profiling.model.summary_algorithms import (
     series_handle_nulls,
     series_hashable,
 )
+from ydata_profiling.model.var_description.default import VarDescription
 
 
 def get_character_counts_vc(vc: pd.Series) -> pd.Series:
@@ -214,8 +215,8 @@ def length_summary_vc(vc: pd.Series) -> dict:
 @series_hashable
 @series_handle_nulls
 def pandas_describe_categorical_1d(
-    config: Settings, series: pd.Series, summary: dict
-) -> Tuple[Settings, pd.Series, dict]:
+    config: Settings, series: pd.Series, summary: VarDescription
+) -> Tuple[Settings, pd.Series, VarDescription]:
     """Describe a categorical series.
 
     Args:
@@ -226,12 +227,11 @@ def pandas_describe_categorical_1d(
     Returns:
         A dict containing calculated series description values.
     """
-
     # Make sure we deal with strings (Issue #100)
     series = series.astype(str)
 
     # Only run if at least 1 non-missing value
-    value_counts = summary["value_counts_without_nan"]
+    value_counts = summary.value_counts_without_nan
     value_counts.index = value_counts.index.astype(str)
 
     summary["imbalance"] = column_imbalance_score(value_counts, len(value_counts))

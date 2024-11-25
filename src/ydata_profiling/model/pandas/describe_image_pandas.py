@@ -12,6 +12,7 @@ from ydata_profiling.model.summary_algorithms import (
     describe_image_1d,
     named_aggregate_summary,
 )
+from ydata_profiling.model.var_description.default import VarDescription
 from ydata_profiling.utils.imghdr_patch import *  # noqa: F401,F403
 
 
@@ -243,8 +244,8 @@ def image_summary(series: pd.Series, exif: bool = False, hash: bool = False) -> 
 
 @describe_image_1d.register
 def pandas_describe_image_1d(
-    config: Settings, series: pd.Series, summary: dict
-) -> Tuple[Settings, pd.Series, dict]:
+    config: Settings, series: pd.Series, summary: VarDescription
+) -> Tuple[Settings, pd.Series, VarDescription]:
     if series.hasnans:
         raise ValueError("May not contain NaNs")
     if not hasattr(series, "str"):

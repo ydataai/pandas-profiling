@@ -1,4 +1,5 @@
 """Correlations between variables."""
+
 from typing import Optional
 
 import pandas as pd

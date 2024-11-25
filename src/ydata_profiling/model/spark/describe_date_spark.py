@@ -6,6 +6,7 @@ from pyspark.sql import DataFrame
 
 from ydata_profiling.config import Settings
 from ydata_profiling.model.summary_algorithms import describe_date_1d
+from ydata_profiling.model.var_description.default import VarDescription
 
 
 def date_stats_spark(df: DataFrame, summary: dict) -> dict:
@@ -21,8 +22,8 @@ def date_stats_spark(df: DataFrame, summary: dict) -> dict:
 
 @describe_date_1d.register
 def describe_date_1d_spark(
-    config: Settings, df: DataFrame, summary: dict
-) -> Tuple[Settings, DataFrame, dict]:
+    config: Settings, df: DataFrame, summary: VarDescription
+) -> Tuple[Settings, DataFrame, VarDescription]:
     """Describe a date series.
 
     Args:

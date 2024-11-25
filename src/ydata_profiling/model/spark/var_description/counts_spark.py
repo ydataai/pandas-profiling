@@ -1,23 +1,12 @@
-from typing import Tuple
-
 from pyspark.sql import DataFrame
 
 from ydata_profiling.config import Settings
-from ydata_profiling.model.summary_algorithms import describe_counts
+from ydata_profiling.model.var_description.counts import VarCounts
 
 
-@describe_counts.register
-def describe_counts_spark(
-    config: Settings, series: DataFrame, summary: dict
-) -> Tuple[Settings, DataFrame, dict]:
-    """Counts the values in a series (with and without NaN, distinct).
-
-    Args:
-        series: Series for which we want to calculate the values.
-
-    Returns:
-        A dictionary with the count values (with and without NaN, distinct).
-    """
+def get_counts_spark(config: Settings, series: DataFrame) -> VarCounts:
+    """Get a VarCounts object for a spark series."""
+    length = series.count()
 
     value_counts = series.groupBy(series.columns).count()
     value_counts = value_counts.sort("count", ascending=False).persist()
@@ -37,14 +26,10 @@ def describe_counts_spark(
         .squeeze(axis="columns")
     )
 
-    summary["n_missing"] = n_missing
-    summary["value_counts"] = value_counts.persist()
-    summary["value_counts_index_sorted"] = value_counts_index_sorted
-
     # this is necessary as freqtables requires value_counts_without_nan
     # to be a pandas series. However, if we try to get everything into
     # pandas we will definitly crash the server
-    summary["value_counts_without_nan"] = (
+    value_counts_without_nan = (
         value_counts.dropna()
         .limit(200)
         .toPandas()
@@ -52,4 +37,19 @@ def describe_counts_spark(
         .squeeze(axis="columns")
     )
 
-    return config, series, summary
+    # FIXME: This is not correct, but used to fulfil render expectations
+    # @chanedwin
+    memory_size = 0
+
+    return VarCounts(
+        hashable=False,
+        value_counts_without_nan=value_counts_without_nan,
+        value_counts_index_sorted=value_counts_index_sorted,
+        ordering=False,
+        n_missing=n_missing,
+        n=length,
+        p_missing=n_missing / length,
+        count=length - n_missing,
+        memory_size=memory_size,
+        value_counts=value_counts.persist(),
+    )
