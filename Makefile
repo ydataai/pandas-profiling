@@ -29,10 +29,10 @@ package:
 	twine check dist/*
 
 install:
-	pip install -e .[notebook]
+	pip install -e ".[notebook]"
 
 install-docs: install ### Installs regular and docs dependencies
-	pip install -r requirements-docs.txt
+	pip install -e ".[docs]"
 
 install-spark-ci:
 	sudo apt-get update

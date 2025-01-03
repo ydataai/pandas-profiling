@@ -81,8 +81,7 @@ jobs:
           ${{ runner.os }}-${{ matrix.pandas }}-pip-
     - run: |
         pip install --upgrade pip setuptools wheel
-        pip install -r requirements.txt "${{ matrix.pandas }}" "${{ matrix.numpy }}"
-        pip install -r requirements-test.txt
+        pip install ".[test]" "${{ matrix.pandas }}" "${{ matrix.numpy }}"
     - run: echo "YDATA_PROFILING_NO_ANALYTICS=False" >> $GITHUB_ENV
     - run: make install
 
@@ -130,8 +129,7 @@ jobs:
           ${{ runner.os }}-${{ matrix.pandas }}-pip-
     - run: |
         pip install --upgrade pip setuptools wheel
-        pip install -r requirements.txt "${{ matrix.pandas }}" "${{ matrix.numpy }}"
-        pip install -r requirements-test.txt
+        pip install ".[test]" "${{ matrix.pandas }}" "${{ matrix.numpy }}"
         echo "YDATA_PROFILING_NO_ANALYTICS=False" >> $GITHUB_ENV
     - run: make install
 
@@ -146,8 +144,7 @@ jobs:
           ${{ runner.os }}-${{ matrix.pandas }}-pip-
     - run: |
         pip install --upgrade pip setuptools wheel
-        pip install -r requirements.txt "${{ matrix.pandas }}" "${{ matrix.numpy }}"
-        pip install -r requirements-test.txt
+        pip install ".[test]" "${{ matrix.pandas }}" "${{ matrix.numpy }}"
     - run: make install
     - run: make test_cov
     - run: codecov -F py${{ matrix.python-version }}-${{ matrix.os }}-${{ matrix.pandas }}-${{ matrix.numpy }}
@@ -205,14 +202,13 @@ jobs:
       - run: |
           pip install --upgrade pip setuptools wheel
           pip install pytest-spark>=0.6.0 pyarrow==1.0.1 pyspark=="${{ matrix.spark }}"
-          pip install -r requirements.txt
-          pip install -r requirements-test.txt
+          pip install ".[test]"
           pip install "${{ matrix.pandas }}" "${{ matrix.numpy }}"
       - if: ${{ matrix.spark != '3.0.1' }}
         run: echo "ARROW_PRE_0_15_IPC_FORMAT=1" >> $GITHUB_ENV
       - run: echo "SPARK_LOCAL_IP=127.0.0.1" >> $GITHUB_ENV
       - run: make install
       - run: make install-spark-ci
-      - run: pip install -r requirements-spark.txt # Make sure the proper version of pandas is install after everything
+      - run: pip install ".[spark]" # Make sure the proper version of pandas is install after everything
       - run: make test_spark
 

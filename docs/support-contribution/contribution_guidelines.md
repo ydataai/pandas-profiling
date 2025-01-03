@@ -33,7 +33,7 @@ To activate the local mechanisms (created using pre-commit hooks), run the
 following commands:
 
 ``` console
-pip install -r requirements-dev.txt
+pip install ".[dev]"
 pre-commit install --hook-type commit-msg --hook-type pre-commit
 ```
 
