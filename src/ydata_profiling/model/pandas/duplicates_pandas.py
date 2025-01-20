@@ -35,6 +35,7 @@ def pandas_get_duplicates(
             duplicated_rows = df.duplicated(subset=supported_columns, keep=False)
             duplicated_rows = (
                 df[duplicated_rows]
+                .rename_axis(index=lambda _: None)
                 .groupby(supported_columns, dropna=False, observed=True)
                 .size()
                 .reset_index(name=duplicates_key)
