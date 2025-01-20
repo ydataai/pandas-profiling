@@ -634,7 +634,7 @@ def supported_alerts(summary: dict) -> List[Alert]:
     return alerts
 
 
-def unsupported_alerts(summary: Dict[str, Any]) -> List[Alert]:
+def unsupported_alerts() -> List[Alert]:
     alerts: List[Alert] = [
         UnsupportedAlert(),
         RejectedAlert(),
@@ -657,7 +657,7 @@ def check_variable_alerts(config: Settings, col: str, description: dict) -> List
     alerts += generic_alerts(description)
 
     if description["type"] == "Unsupported":
-        alerts += unsupported_alerts(description)
+        alerts += unsupported_alerts()
     else:
         alerts += supported_alerts(description)
 

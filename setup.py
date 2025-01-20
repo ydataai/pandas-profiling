@@ -39,6 +39,9 @@ setup(
         "unicode": [
             "tangled-up-in-unicode==0.2.0",
         ],
+        "numba": [
+            "numba>=0.56.0, <1",
+        ],
     },
     package_data={
         "ydata_profiling": ["py.typed"],

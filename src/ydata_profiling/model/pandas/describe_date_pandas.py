@@ -11,6 +11,13 @@ from ydata_profiling.model.summary_algorithms import (
     series_handle_nulls,
     series_hashable,
 )
+from ydata_profiling.model.typeset_relations import is_pandas_1
+
+
+def to_datetime(series: pd.Series) -> pd.Series:
+    if is_pandas_1():
+        return pd.to_datetime(series, errors="coerce")
+    return pd.to_datetime(series, format="mixed", errors="coerce")
 
 
 @describe_date_1d.register
@@ -29,6 +36,12 @@ def pandas_describe_date_1d(
     Returns:
         A dict containing calculated series description values.
     """
+    og_series = series.dropna()
+    series = to_datetime(og_series)
+    invalid_values = og_series[series.isna()]
+
+    series = series.dropna()
+
     if summary["value_counts_without_nan"].empty:
         values = series.values
         summary.update(
@@ -53,5 +66,12 @@ def pandas_describe_date_1d(
     if config.vars.num.chi_squared_threshold > 0.0:
         summary["chi_squared"] = chi_square(values)
 
-    summary.update(histogram_compute(config, values, summary["n_distinct"]))
+    summary.update(histogram_compute(config, values, series.nunique()))
+    summary.update(
+        {
+            "invalid_dates": invalid_values.nunique(),
+            "n_invalid_dates": len(invalid_values),
+            "p_invalid_dates": len(invalid_values) / summary["n"],
+        }
+    )
     return config, values, summary

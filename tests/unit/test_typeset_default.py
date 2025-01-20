@@ -475,3 +475,14 @@ def test_type_schema(dataframe: pd.DataFrame, column: str, type_schema: dict):
     assert prof.typeset.type_schema[column] == prof.typeset._get_type(
         type_schema[column]
     )
+
+
+def test_type_schema_with_null_column():
+    df = pd.DataFrame({"null_col": [None] * 100})
+    prof = ProfileReport(df, type_schema={"null_col": "datetime"})
+    description = prof.description_set
+    assert description.variables["null_col"]["type"] == "Unsupported"
+
+    prof = ProfileReport(df, type_schema={"null_col": "numeric"})
+    description = prof.description_set
+    assert description.variables["null_col"]["type"] == "Unsupported"

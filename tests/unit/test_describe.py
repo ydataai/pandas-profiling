@@ -582,3 +582,19 @@ def test_describe_list(summarizer, typeset):
 
     with pytest.raises(NotImplementedError):
         describe(config, "", [1, 2, 3], summarizer, typeset)
+
+
+def test_decribe_series_type_schema(config, summarizer):
+    "Test describe with invalid date types."
+    typeset = ProfilingTypeSet(config, type_schema={"date": "datetime"})
+    data = {
+        "value": [1, 2, 3, 4],
+        "date": ["0001-01-01", "9999-12-31", "2022-10-03", "2022-10-04"],
+    }
+    df = pd.DataFrame(data)
+    result = describe(config, df, summarizer, typeset)
+
+    assert result.variables["date"]["type"] == "DateTime"
+    assert result.variables["date"]["n_missing"] == 0
+    assert result.variables["date"]["n_invalid_dates"] == 2
+    assert result.variables["date"]["p_invalid_dates"] == 0.5

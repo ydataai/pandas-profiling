@@ -2,12 +2,8 @@
 
 .. include:: ../../README.md
 """
-
 # ignore numba warnings
 import warnings  # isort:skip # noqa
-from numba.core.errors import NumbaDeprecationWarning  # isort:skip # noqa
-
-warnings.simplefilter("ignore", category=NumbaDeprecationWarning)
 
 import importlib.util  # isort:skip # noqa
 
@@ -23,6 +19,11 @@ spec = importlib.util.find_spec("pyspark")
 if spec is not None:
     import ydata_profiling.model.spark  # isort:skip  # noqa
 
+spec_numba = importlib.util.find_spec("numba")
+if spec_numba is not None:
+    from numba.core.errors import NumbaDeprecationWarning  # isort:skip # noqa
+
+    warnings.simplefilter("ignore", category=NumbaDeprecationWarning)
 
 __all__ = [
     "pandas_decorator",
