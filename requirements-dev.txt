@@ -9,3 +9,4 @@ sphinx_rtd_theme>=0.4.3
 sphinx-autodoc-typehints>=1.10.3
 sphinx-multiversion>=0.2.3
 autodoc_pydantic
+nltk
