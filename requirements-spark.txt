@@ -4,6 +4,6 @@
 pyspark>=2.3.0
 pyarrow>=2.0.0
 pandas>1.1, <2, !=1.4.0
-numpy>=1.16.0,<1.24
+numpy>=1.26.4,<1.27
 visions[type_image_path]==0.7.5
 
