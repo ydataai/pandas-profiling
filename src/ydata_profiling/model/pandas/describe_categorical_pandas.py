@@ -19,7 +19,7 @@ from ydata_profiling.model.summary_algorithms import (
 
 
 def get_character_counts_vc(vc: pd.Series) -> pd.Series:
-    series = pd.Series(vc.index, index=vc)
+    series = pd.Series(vc.index, index=vc, dtype=object)
     characters = series[series != ""].apply(list)
     characters = characters.explode()
 
@@ -169,7 +169,7 @@ def word_summary_vc(vc: pd.Series, stop_words: List[str] = []) -> dict:
     # TODO: configurable lowercase/punctuation etc.
     # TODO: remove punctuation in words
 
-    series = pd.Series(vc.index, index=vc)
+    series = pd.Series(vc.index, index=vc, dtype=object)
     word_lists = series.str.lower().str.split()
     words = word_lists.explode().str.strip(string.punctuation + string.whitespace)
     word_counts = pd.Series(words.index, index=words)
@@ -187,7 +187,7 @@ def word_summary_vc(vc: pd.Series, stop_words: List[str] = []) -> dict:
 
 
 def length_summary_vc(vc: pd.Series) -> dict:
-    series = pd.Series(vc.index, index=vc)
+    series = pd.Series(vc.index, index=vc, dtype=object)
     length = series.str.len()
     length_counts = pd.Series(length.index, index=length)
     length_counts = length_counts.groupby(level=0, sort=False).sum()

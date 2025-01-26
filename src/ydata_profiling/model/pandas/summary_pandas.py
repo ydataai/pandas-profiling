@@ -44,7 +44,8 @@ def pandas_describe_1d(
     """
 
     # Make sure pd.NA is not in the series
-    series = series.fillna(np.nan)
+    with pd.option_context("future.no_silent_downcasting", True):
+        series = series.fillna(np.nan)
 
     has_cast_type = _is_cast_type_defined(typeset, series.name)
     cast_type = str(typeset.type_schema[series.name]) if has_cast_type else None
